@@ -52,7 +52,7 @@ import { Link } from 'react-router-dom';
 export default function Contact() {
     const { id } = useParams(); // Picture index from route params
     const [picture, setPicture] = useState(''); // State to store the image data
-    const [loading, setLoading] = useState(true); // Loading state for placeholder effect
+    const [loading, setLoading] = useState(false); // Loading state for placeholder effect
 
     useEffect(() => {
         const fetchPicture = async () => {
@@ -68,7 +68,7 @@ export default function Contact() {
 
                 // Fetch picture from the server
                 const response = await axios.get(
-                    `${process.env.REACT_APP_BASE_URL}/picture/${id}`, 
+                    `${process.env.REACT_APP_BASE_URL}/base`, 
                     { responseType: 'arraybuffer', withCredentials: true } // Fetch as binary data
                 );
 
@@ -84,35 +84,42 @@ export default function Contact() {
                 // setLoading(false); // Stop loading
             } catch (err) {
                 console.error('Error fetching picture:', err.message);
-                setLoading(false); // Stop loading even if an error occurs
+                // setLoading(false); // Stop loading even if an error occurs
+            }
+            finally{
+                setLoading(false)
             }
         };
 
         fetchPicture();
-    }, [id]); // Only re-run when `id` changes
+    }, []); // Only re-run when `id` changes
 
     return (
-        <div className="pt-16 z-20 bg-slate-700 min-h-screen text-black">
-            <div className="flex justify-center items-center">
-                {/* {loading ? (
+        // <div className="pt-16 z-20 bg-slate-700 min-h-screen text-black">
+            <div className="relative flex justify-center items-center overflow-hidden w-full min-h-screen">
+                {console.log(picture)}
+                {loading ? (
                     // Placeholder for when the image is loading
                     <div className="animate-pulse bg-gray-300 w-80 h-80 rounded-md" />
-                ) : (                                                                                                                                                                                                                                                                                                                                                                 */}
-                    {/* // Render the fetched picture */}
+                ) : (                                                                                                                                                                                                                                                                                                                                                                
+                    // {/* // Render the fetched picture */}
+                    
                     <img
+                        onLoad={()=>setLoading(false)}
                         key={id}
-                        className="rounded-md w-full max-w-md h-auto"
-                        src={picture || `${process.env.REACT_APP_BASE_URL}/picture/${id}`} // Set the image source to the Base64 string
+                        className="absolute z-0 top-0 left-0 rounded-md w-full max-w-full min-h-screen"
+                        src={'imgs/people.jpg' || picture || `${process.env.REACT_APP_BASE_URL}/base`} // Set the image source to the Base64 string
                         alt={`Fetched picture ${id}`}
-                        width={600}
-                        height={600}
+                        width={1400}
+                        height={1400}
+                        loading="lazy"
                     />
-                {/* )} */}
-                <Link to={`/contact/0`}>Move to site 1</Link>
+                 )}
+                {/* <Link to={`/contact/0`}>Move to site 1</Link>
                 <Link to={`/contact/1`}>Move to site 2</Link>
-                <Link to={`/contact/2`}>Move to site 3</Link>
+                <Link to={`/contact/2`}>Move to site 3</Link> */}
             </div>
-        </div>
+        // </div>
     );
 }
 
