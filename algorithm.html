@@ -5,14 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script type="module" src="/algo.js"></script>
+    <link rel="stylesheet" href="algo.css">
 </head>
 <body>
-    <h1>Algorithm</h1>
-    <div class="display"></div>
-    <div><input id="input_todo" type="text" name="input_todo"/></div>
-    <button class="addright">+</button>
-    <button class="addleft">-</button>
-    <button class="addtodo">Add Todo</button>
-    <button class="deletetodo">Delete Todo</button>
+    <h1>Algorithm: ToDo</h1>
+    <div class="container">
+        <div class="display"></div>
+        <div><input id="input_todo" type="text" placeholder="Enter Task" name="input_todo"/></div>
+        <button class="addright">+</button>
+        <button class="addleft">-</button>
+        <button class="addtodo">Add Todo</button>
+        <button class="deletetodo">Delete Todo</button>
+        <button class="appendtodo">Clone && Shuffle List</button>
+        <div class="append_display"></div>
+    </div>
+    
 </body>
 </html>
