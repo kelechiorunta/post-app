@@ -137,9 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
  
         if (compareList(addedTasks, shuffledTasks).isMatched) {
+            appendDisplay.style.backgroundColor = 'green'
             setTimeout(()=>{console.log("Bingo");
-            alert(`Congratulations, you finally made it after \n${compareList(addedTasks, shuffledTasks).trials - 1} attempts`); trials=0;}, 1000);
+            alert(`Congratulations, you finally made it after \n${compareList(addedTasks, shuffledTasks).trials - 1} attempts`);
+             trials=0;}, 1000);
+        }else{
+            appendDisplay.style.backgroundColor = 'black';
         }
+        
     })
 
         let newarr = [];
