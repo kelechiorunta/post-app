@@ -4,30 +4,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const  moveleftbtn = document.querySelector('.addleft');
     const inputTodo = document.getElementById('input_todo');
     const addTodo = document.querySelector('.addtodo');
-    // display.textContent = "Hello Kelechi"
+    const deleteTodo = document.querySelector('.deletetodo');
+    var inputTask = document.querySelectorAll('ul .task');
+    // display.textContent = "Hello Kelechi"heckbox"
     let val = 0;
     let newtask = '';
-    let id_entry = 0
+    var id_entry = 0 ;
+    var id = 0;
+    var addedTasks = [];
+    var currentid;
     let productStack = []//[{id:0, todo:"Get home on time"}];
 
     const todoList = (arr) => {
-        const newArray = arr.map(item => 
-            `<div key=${item.id}>
-                <input type="checkbox" ${item.completed ? 'checked' : ''} />
+        const newArray = arr.map((item, index) => 
+            `<div>
+                <input id=${index} class="task" type="checkbox" ${item.completed ? 'checked' : ''} />
                 ${item.todo}
-            </div>`
+             </div>
+            `
         );
         return newArray.join('');
     };
-
-    // display.innerHTML = todoList(productStack);
 
     /**Button to add value to the beginining of the array */
     moveleftbtn.addEventListener('click', () => {
         display.textContent = //moveLeft([0], val).toString(); 
         val++})
 
-    /**Input element */
+    /**Input element to input new task*/
         inputTodo.addEventListener('input', function(){
         newtask = this.value.trim();
         console.log(newtask)
@@ -35,11 +39,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**Add todo button to add todos to the todo array */
     addTodo.addEventListener('click', () => {
-        id_entry ++
-        const addedTasks = addtoStack(productStack, {id: id_entry, todo: newtask, completed:false})
+        /**
+         * Return an updated addedTaks array from the addtoStack algorithm
+         */
+        addedTasks = addtoStack(addedTasks, {id, todo: newtask, completed:false})
+        /**
+         * Displays the result in the dispaly element
+         * Resets the inputTodo element to empty field
+         * console logs the mapped elements of the task elements
+         */
         display.innerHTML = `<ul>${todoList(addedTasks)}</ul>`
         inputTodo.value = "";
+        console.log(document.querySelectorAll('ul div .task'))
+
+        /**
+         * if the task element exists, then assign a change event handler to register a 
+         * callback that toggles the selected task element completed property to true or false
+         * and returns the updated addedTaks array
+         */
+        if ( document.querySelectorAll('ul .task') && document.querySelectorAll('ul .task').length > 0) {
+            document.querySelectorAll('ul .task').forEach((checkbox, index) => {
+                checkbox.addEventListener('change', (event) => {
+                    if (event.target.checked) {
+                        currentid = checkbox.id-1;
+                        addedTasks[index].completed =  true
+                        // addedTasks[checkbox.id].completed = true
+                        console.log(`Checkbox with ID: ${checkbox.id} is Selected`);
+                    } else {
+                        addedTasks[index].completed =  false
+                        console.log(`Checkbox with ID: ${checkbox.id} is Deselected`);
+                    }
+                    return addedTasks
+                });
+            });
+        }
+        
     })
+
+    /**Delete todo button to delete todos from the todo array */
+    deleteTodo.addEventListener('click', () => {
+        /**
+         * Return a filteredTasks that filters the incompleted tasks of addedTasks array 
+         */
+        const filteredTasks = removefromStack(addedTasks);
+        /**
+         * Displays the result and updates the addedTasks
+         */
+        display.innerHTML = `<ul>${todoList(filteredTasks)}</ul>`
+        addedTasks = filteredTasks
+        
+        // console log the updated addedTasks
+        console.log(addedTasks)
+        console.log(document.querySelectorAll('ul div .task'))
+
+        /**
+         * if the task element exists, then assign a change event handler to register a 
+         * callback that toggles the selected task element completed property to true or false
+         * and returns the updated addedTaks array
+         */
+        if ( document.querySelectorAll('ul .task') && document.querySelectorAll('ul .task').length > 0) {
+            document.querySelectorAll('ul .task').forEach((checkbox, index) => {
+                checkbox.addEventListener('change', (event) => {
+                    if (event.target.checked) {
+                        currentid = checkbox.id-1;
+                        addedTasks[index].completed =  true
+                        // addedTasks[checkbox.id].completed = true
+                        console.log(`Checkbox with ID: ${checkbox.id} is Selected`);
+                    } else {
+                        addedTasks[index].completed =  false
+                        console.log(`Checkbox with ID: ${checkbox.id} is Deselected`);
+                    }
+                    return addedTasks
+                });
+            });
+        }
+    })
+
         let newarr = [];
     const moveLeft = (arr, n) => {
         if (n < 0) {
@@ -50,17 +125,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    /**addtoStack algorithm that adds a task to the list of tasks and can only accept a maximum of five tasks */
     const addtoStack = (arr, task) => {
         if (arr.length >= 5) {
             return arr
         } else {
-            arr.push(task)
+            id_entry ++
+            const { id, todo, completed } = task
+            arr.push({id:id_entry, todo, completed})
             return arr//addtoStack([task, ...arr], task )
         }
     }
 
-    const removefromStack = (arr, id) => {
-
+    /** removefromStack algorithm that filters an array of all incompleted tasks*/
+    const removefromStack = (arr) => {
+        if (arr.length <= 0){
+            return arr
+        }else{
+            const filteredarr = arr.filter(item => item.completed===false);
+            return filteredarr;
+        }
+        
     }
 
     //     let newarr = [];
@@ -81,3 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // }
 
 })
+
+
+// let inputTask = document.querySelectorAll('ul .task')
+
+// if (inputTask && inputTask.length > 0) {
+//     console.log(inputTask)
+//     inputTask.forEach(checkbox => {
+//         checkbox.addEventListener('change', (event) => {
+//             alert("Hello")
+//             // if (event.target.checked) {
+//             //     console.log(`Checkbox with ID: ${checkbox.id} is Selected`);
+//             // } else {
+//             //     console.log(`Checkbox with ID: ${checkbox.id} is Deselected`);
+//             // }
+//         });
+//     });
+// }
