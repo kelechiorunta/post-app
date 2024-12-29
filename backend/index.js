@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs'
+import fs, { createReadStream, read } from 'fs'
 import { Readable, Duplex, Transform } from 'stream';
 import sharp from 'sharp';
 import authRouter from './routes/auth.js';
@@ -12,6 +12,10 @@ import postRouter from './routes/post.js';
 import pictureRouter from './routes/picture.js';
 import { WebSocketServer } from 'ws';
 import Redis from 'ioredis';
+import path from 'path';
+import { Worker } from 'worker_threads';
+
+const dirname_img = path.join(import.meta.dirname, './product9.jpg')
 
 const redis = new Redis({
     host: 'redis-16067.c259.us-central1-2.gce.redns.redis-cloud.com',
@@ -535,6 +539,80 @@ server.get('/transformgreetings', async(req, res) => {
         res.end('Internal Server Error');
     }
 })
+let reqNum = 0;
+
+server.get('/base', (req, res) => {
+    reqNum++;
+    console.log(reqNum)
+    // Create Worker instance
+    const worker = new Worker(path.resolve('./backend/worker.js'), {
+        workerData: path.resolve('./public/imgs/product5.jpg'),
+    });
+
+    // console.log('Worker initialized:', worker);
+
+    worker.on('message', (data) => {
+        if (reqNum > 3) {
+            console.log("Hit five times");
+
+            // Ensure response is not sent more than once
+            if (!res.headersSent) {
+                res.status(200).json({ message: 'Hit five times', workerData: data.toString() });
+            }
+        }
+    });
+
+    worker.on('error', (err) => {
+        console.error("Worker's failure:", err);
+
+        // Ensure response is sent for worker error
+        if (!res.headersSent) {
+            res.status(500).json({ error: "Worker error occurred" });
+        }
+    });
+
+    worker.on('exit', (code) => {
+        if (code !== 0) {
+            console.error(`Worker stopped with exit code ${code}`);
+
+            // Ensure response is sent for worker exit errors
+            if (!res.headersSent) {
+                res.status(500).json({ error: `Worker exited with code ${code}` });
+            }
+        }
+    });
+
+    // Stream the file
+    try {
+        const readableStream = fs.createReadStream('./public/imgs/product5.jpg');
+
+        readableStream.on('error', (err) => {
+            console.error("ReadStream failed:", err);
+
+            // Ensure response is sent for stream errors
+            if (!res.headersSent) {
+                res.status(500).json({ error: "ReadStream failed" });
+            }
+        });
+
+        // Pipe the stream to the response
+        if (!res.headersSent) {
+            // res.setHeader('Content-Type', 'image/jpeg')
+            res.set({
+                'Content-Type': 'image/jpeg',
+                'Cache-Control': 'public, maxAge=6000'
+            })
+            readableStream.pipe(res);
+        }
+    } catch (err) {
+        console.error("Stream error:", err.message);
+
+        // Ensure response is sent for stream errors
+        if (!res.headersSent) {
+            res.status(500).json({ error: "Unable to stream" });
+        }
+    }
+});
 
 server.listen(7000, () => {
     console.log(`Server is listening at port ${7000}`);
