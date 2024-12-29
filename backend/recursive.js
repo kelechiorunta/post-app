@@ -56,3 +56,61 @@ const recursive_binary_search = (list, len) => {
         
     }
 console.log(recursive_binary_search(numbers, 7))
+
+let shuffledArr = [];
+    /**shuffles the array based on this recursive algorithm */
+    const shuffleArr = (arr) => {
+        if (arr.length <= 0) {
+            return arr
+        } else {
+            let id = Math.floor(Math.random() * arr.length);
+            shuffledArr.push(arr[id])
+            let filteredArr = arr.filter(item => item !== arr[id])
+            if (filteredArr.length === 0){
+                return shuffledArr
+            }else{
+                return [...shuffleArr(filteredArr)]
+            }
+           
+        }
+    }
+
+    const nums = [97, 24, 3, 5, 9];
+    // console.log(shuffleArr(nums))
+/**Reverse the array buildup */
+    let swappedArr = [];
+    const reverseArr = (arr) => {
+        if (arr.length <= 0) {
+            return arr
+        } else {
+            let last = arr[arr.length - 1]
+            swappedArr.push(last);
+            
+            let filteredArr = arr.filter(item => item !==last);
+    
+            if (filteredArr.length <= 0) {
+                return swappedArr;
+            }else{
+                return [...reverseArr(filteredArr)]
+            }
+        }
+    }
+
+    console.log(reverseArr(nums))
+
+    const swapArr = (arr) => {
+        if (arr.length <=0 ){
+            return arr
+        }else{
+            let first = arr[0];
+            let last = arr[arr.length -1]
+            if (arr.length === 1) {
+                return [first]
+            }
+            let middleArr = (arr.slice(1, -1));
+            
+            return [last, ...swapArr(middleArr), first]
+        }
+    }
+const swaps = [23, 45, 33, 21, 50]
+    console.log(swapArr(swaps))
