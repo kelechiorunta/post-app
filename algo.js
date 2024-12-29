@@ -5,18 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputTodo = document.getElementById('input_todo');
     const addTodo = document.querySelector('.addtodo');
     const deleteTodo = document.querySelector('.deletetodo');
-    var inputTask = document.querySelectorAll('ul .task');
-    // display.textContent = "Hello Kelechi"heckbox"
+    const appendTodo = document.querySelector('.appendtodo');
+    const appendDisplay = document.querySelector('.append_display');
+    
     let val = 0;
     let newtask = '';
     var id_entry = 0 ;
     var id = 0;
     var addedTasks = [];
+    let shuffledArr = [];
+    let newArray = [];
+    let trials = 0;
     var currentid;
     let productStack = []//[{id:0, todo:"Get home on time"}];
 
     const todoList = (arr) => {
-        const newArray = arr.map((item, index) => 
+        if (arr.length <= 0) {
+            return arr
+        }
+        newArray = []
+        newArray = arr.map((item, index) => 
             `<div>
                 <input id=${index} class="task" type="checkbox" ${item.completed ? 'checked' : ''} />
                 ${item.todo}
@@ -28,8 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**Button to add value to the beginining of the array */
     moveleftbtn.addEventListener('click', () => {
-        display.textContent = //moveLeft([0], val).toString(); 
-        val++})
+        //display.textContent = //moveLeft([0], val).toString(); 
+        //val++
+        // appendDisplay.innerHTML = ""
+    })
 
     /**Input element to input new task*/
         inputTodo.addEventListener('input', function(){
@@ -115,6 +125,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
+    appendTodo.addEventListener('click', () => {
+        /**Reinitialize the appendDisplay and the shuffledArr toi be empty fields */
+        appendDisplay.innerHTML = ''
+        shuffledArr = []
+        /**Append the updated shuffled Tasks array to the appendDisplay element */
+        const shuffledTasks = shuffleArr(addedTasks);
+        console.log(shuffledTasks);
+        appendDisplay.innerHTML = `<ul>${todoList(shuffledTasks)}</ul>`;
+        
+        
+ 
+        if (compareList(addedTasks, shuffledTasks).isMatched) {
+            setTimeout(()=>{console.log("Bingo");
+            alert(`Congratulations, you finally made it after \n${compareList(addedTasks, shuffledTasks).trials - 1} attempts`); trials=0;}, 1000);
+        }
+    })
+
         let newarr = [];
     const moveLeft = (arr, n) => {
         if (n < 0) {
@@ -145,41 +172,36 @@ document.addEventListener('DOMContentLoaded', () => {
             const filteredarr = arr.filter(item => item.completed===false);
             return filteredarr;
         }
-        
     }
 
-    //     let newarr = [];
-    // const moveleft = (arr, n) => {
-    //     if (arr.length === 0) {
-    //         return false
-    //     }else if (n==0) {
-    //         newarr.unshift(n-1)
-    //         // arr.unshift(n-1)
-    //         return  [...newarr, moveleft([...newarr], n-1)]
-    //     }else if (n>=arr.length) {
-    //         arr.push(n+1)
-    //         return  moveleft([n-1, ...arr], n+1) 
-    //     }else{
-    //         return n--
-    //         // return  [ moveleft([n-1, ...arr], n-1), ...arr]
-    //     }
-    // }
+    /**shuffles the array based on this recursive algorithm */
+    const shuffleArr = (arr) => {
+        if (arr.length <= 0) {
+            return arr
+        } else {
+            let id = Math.floor(Math.random() * arr.length);
+            shuffledArr.push(arr[id])
+            let filteredArr = arr.filter(item => item !== arr[id])
+            if (filteredArr.length === 0){
+                return shuffledArr
+            }else{
+                return [...shuffleArr(filteredArr)]
+            }
+           
+        }
+    }
 
+    /**Compare array and return if they are in similar makeup */
+
+    const compareList = (arr1, arr2) => {
+        if (arr2.length <= 0 || arr1.length <= 0) {
+            return arr2
+        } else {
+            trials ++
+            let isMatched = arr2.every((item, index)=>item.id===arr1[index].id);
+            console.log(isMatched.toString());
+            return {isMatched, trials} 
+        }
+
+    }
 })
-
-
-// let inputTask = document.querySelectorAll('ul .task')
-
-// if (inputTask && inputTask.length > 0) {
-//     console.log(inputTask)
-//     inputTask.forEach(checkbox => {
-//         checkbox.addEventListener('change', (event) => {
-//             alert("Hello")
-//             // if (event.target.checked) {
-//             //     console.log(`Checkbox with ID: ${checkbox.id} is Selected`);
-//             // } else {
-//             //     console.log(`Checkbox with ID: ${checkbox.id} is Deselected`);
-//             // }
-//         });
-//     });
-// }
