@@ -13,6 +13,21 @@ const sum = (n) => {
 
 console.log(sum(2))
 
+/**Factorial of a no */
+
+const factorial = (n) => {
+    if (n <= 1){
+        return 0
+    }else if (n === 2){
+        let x = n * (n-1)
+        return x
+    }else {
+        return n * factorial(n-1);
+    }
+}
+
+console.log(factorial(6))
+
 /**Sort an array in ascending order */
 const sortArray = (arr) => {
     if (arr.length === 0) {
