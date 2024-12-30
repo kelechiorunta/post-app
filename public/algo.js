@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const appendTodo = document.querySelector('.appendtodo');
     const appendDisplay = document.querySelector('.append_display');
     const timerdisplay = document.querySelector('.timer_display');
+    const score = document.querySelector('.score');
     var timer = parseInt(timerdisplay.textContent);
 
     let val = 0;
@@ -147,10 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (compareList(addedTasks, shuffledTasks).isMatched) {
             appendDisplay.style.backgroundColor = 'green';
             clearInterval(intervalId);
-            appendTodo.disabled=true
+            appendTodo.disabled=true;
+            let result = parseInt(score.textContent);
+            
             timeoutId = setTimeout(()=>{console.log("Bingo");
             alert(`Congratulations, you finally made it after \n${compareList(addedTasks, shuffledTasks).trials - 1} attempts and ${10 - parseInt(timerdisplay.textContent)} secs`);
-             trials=0; timerdisplay.textContent='10'; activateTimer(); shuffle()}, 1000);
+             trials=0; timerdisplay.textContent='10'; result += 5; score.textContent = result; activateTimer(); shuffle()}, 1000);
         }
         else if (timer <= 0 && (timerdisplay.textContent='0')) {
             appendDisplay.style.backgroundColor = 'red';
@@ -181,14 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (timer==0){
                 appendDisplay.style.backgroundColor = 'red';
             }
-            
+
             if (timer < 0) {
                 appendDisplay.style.backgroundColor = 'red';
                 clearInterval(intervalId);
                 alert("Sorry, time's up!");
                 timer=10
                 appendDisplay.style.backgroundColor = 'black';
-                appendTodo.disabled=false
+                appendTodo.disabled=false;
                 trials = 0;
                 timerdisplay.textContent='10';
                 activateTimer();
