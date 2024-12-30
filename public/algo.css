@@ -1,0 +1,74 @@
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  font-family: "Lato", serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+span, p {
+  font-size: 20px;
+}
+
+p {
+  font-weight: bold;
+}
+
+span {
+  font-weight: lighter;
+}
+
+.container {
+  width: 40%;
+  height: 80%;
+  margin: 2px auto;
+  padding: 1rem;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.display, .append_display {
+  width: 100%;
+  height: 400px;
+  border: 2px solid;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  padding: 2px 4px;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+}
+
+ul div {
+  font-size: 20px;
+  color: blue;
+  color: white;
+}
+
+#input_todo {
+  width: 100%;
+  padding: 2px 4px;
+  font-size: 20px;
+}
+
+button {
+  font-size: 16px;
+  padding: 2px;
+}
+
+h1 {
+  margin: 2px auto;
+}/*# sourceMappingURL=algo.css.map */
