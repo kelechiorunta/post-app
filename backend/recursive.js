@@ -17,16 +17,27 @@ console.log(sum(2))
 
 const factorial = (n) => {
     if (n <= 1){
-        return 0
-    }else if (n === 2){
-        let x = n * (n-1)
-        return x
-    }else {
+        return 1
+    }
+    else {
         return n * factorial(n-1);
     }
 }
 
 console.log(factorial(6))
+
+const rangeRandomNum = (firstNum, endNum) => {
+    if (endNum <= firstNum) {
+        return []
+    } else {
+        const randomNum = Math.floor(Math.random() * (endNum ))
+        let rangeRandomArr = rangeRandomNum(firstNum, randomNum - 1);
+        rangeRandomArr.push(endNum);
+        return rangeRandomArr;
+    }
+}
+
+console.log(rangeRandomNum(1, 100));
 
 /**Sort an array in ascending order */
 const sortArray = (arr) => {
@@ -129,3 +140,17 @@ let shuffledArr = [];
     }
 const swaps = [23, 45, 33, 21, 50]
     console.log(swapArr(swaps))
+
+const recycleArr = (arr, n) => {
+    if (n <= 0 || n > arr.length) {
+        return arr
+    }else{
+        let first = arr[0]
+        arr.shift()
+        let newArr = [...arr, first]
+        return [...recycleArr(newArr, n-1)]
+    }
+}
+
+const myStack = [1, 2, 3, 4];
+console.log(recycleArr(myStack, 0))
