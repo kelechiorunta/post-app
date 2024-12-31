@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const appendDisplay = document.querySelector('.append_display');
     const timerdisplay = document.querySelector('.timer_display');
     const score = document.querySelector('.score');
+    const container = document.querySelector('.container');
+    const documentation = document.querySelector('.documentation');
+    const game = document.querySelector('.game');
+    const settings = document.querySelector('.settings');
+    const player = document.querySelector('.player');
+    const statistics = document.querySelector('.statistics');
     var timer = parseInt(timerdisplay.textContent);
 
     let val = 0;
@@ -132,6 +138,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
+    })
+
+    player.addEventListener('click', () => {
+        container.remove();
+        // container.style.display = 'none';
+        document.body.append(statistics)
+        statistics.style.display = 'block';
+        settings.style.display = 'none'; 
+        // const xml = new XMLHttpRequest();
+
+        // xml.onload = function(){
+        //     if (this.readyState === 4) {
+        //         container.innerHTML = this.responseText;
+        //     }
+        // }
+        // xml.open('GET', './Introduction.html');
+        // xml.send();
+    });
+
+    documentation.addEventListener('click', () => {
+        container.remove();
+        // container.style.display = 'none';
+        document.body.append(settings)
+        settings.style.display = 'block';
+        statistics.style.display = 'none';
+        // const xml = new XMLHttpRequest();
+
+        // xml.onload = function(){
+        //     if (this.readyState === 4) {
+        //         container.innerHTML = this.responseText;
+        //     }
+        // }
+        // xml.open('GET', './Introduction.html');
+        // xml.send();
+    });
+
+    game.addEventListener('click', async() => {
+        
+        // settings.style.display = 'none'; 
+        settings.remove();
+        statistics.remove();
+        document.body.append(container)
+        // container.style.display = 'block' 
+        // const xml = new XMLHttpRequest();
+
+        // xml.onload = function(){
+        //     if (this.readyState === 4) {
+        //         container.innerHTML = this.responseText;
+        //         container.style.width = '50%';
+        //     }
+        // }
+        // xml.open('GET', './algorithm.html');
+        // xml.send();
     })
 
     const shuffle = () => {
