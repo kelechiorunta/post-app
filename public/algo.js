@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var id = 0;
     var addedTasks = [];
     let shuffledArr = [];
-    let newArray = [];
+    // let newArray = [];
     let trials = 0;
     var currentid;
     let productStack = []//[{id:0, todo:"Get home on time"}];
@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     var timeoutId;
     var currentSlide = -1;
     var result = -1;
-    var timerSlider;
-    var currentIndex = 0;
 
     display.style.backgroundImage = `url(${'imgs/reflection.jpg'})`
     timerdisplay.style.color = 'red'
@@ -44,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (arr.length <= 0) {
             return arr
         }
-        newArray = []
-        newArray = arr.map((item, index) => 
+        // newArray = []
+        const newArray = arr.map((item, index) => item.id &&
             `<div>
                 <input id=${index} class="task" type="checkbox" ${item.completed ? 'checked' : ''} />
                 ${item.todo}
@@ -64,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**Input element to input new task*/
         inputTodo.addEventListener('input', function(){
-        newtask = this.value.trim();
+         newtask = this.value.trim();
         console.log(newtask)
     })
 
@@ -73,15 +71,21 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Return an updated addedTaks array from the addtoStack algorithm
          */
+        if (inputTodo.value !== '' ) {
         addedTasks = addtoStack(addedTasks, {id, todo: newtask, completed:false})
         /**
          * Displays the result in the dispaly element
          * Resets the inputTodo element to empty field
          * console logs the mapped elements of the task elements
          */
-        display.innerHTML = `<ul>${todoList(addedTasks)}</ul>`
-        inputTodo.value = "";
-        console.log(document.querySelectorAll('ul div .task'))
+        
+            display.innerHTML = `<ul>${todoList(addedTasks)}</ul>`
+            inputTodo.value = "";
+            console.log(document.querySelectorAll('ul div .task'))
+        }else{
+            alert("Please fill a task list")
+        }
+        
 
         /**
          * if the task element exists, then assign a change event handler to register a 
@@ -112,12 +116,15 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Return a filteredTasks that filters the incompleted tasks of addedTasks array 
          */
+        if (addedTasks) {
         const filteredTasks = removefromStack(addedTasks);
         /**
          * Displays the result and updates the addedTasks
          */
-        display.innerHTML = `<ul>${todoList(filteredTasks)}</ul>`
-        addedTasks = filteredTasks
+        
+            display.innerHTML = `<ul>${todoList(filteredTasks)}</ul>`
+            addedTasks = filteredTasks
+        }
         
         // console log the updated addedTasks
         console.log(addedTasks)
@@ -266,12 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000)
     }
 
-    const slides = ["0", "1", "2"
-        // {id: 0, slide: './imgs/Logo9.png'},
-        // {id: 1, slide: './imgs/Logo14.png'},
-        // {id: 2, slide: './imgs/Logo15.png'},
-    ]
-
     const createSlides = (arr_slides) => {
         currentSlide = (currentSlide + 1) 
         result = currentSlide % (arr_slides.length);
@@ -308,50 +309,46 @@ document.addEventListener('DOMContentLoaded', () => {
     boardBtn.addEventListener('click', () => {
         //  currentSlide++
         const slides = [
-            {id: 0, slide: './imgs/image1.png'},
-            {id: 1, slide: './imgs/image2.png'},
-            {id: 2, slide: './imgs/Logo9.png'},
+            {id: 1, slide: './imgs/image1.png'},
+            {id: 2, slide: './imgs/image2.png'},
+            {id: 3, slide: './imgs/Logo9.png'},
         ]
         let slider = document.querySelector('.slider');//["Slide 1", "Slide 2", "Slide 3"];
         let images = Array.from(slider.querySelectorAll('img'));
     //    slider.innerHTML = '';
        let slideArray = (createSlides(slides))
-        // board.innerHTML = "";
-        // board.innerHTML = `<div class='slider'>${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width='auto' height='auto' />`))}</div>`
+        board.innerHTML = "";
+        board.innerHTML = `<div class='slider'>${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width='auto' height='auto' />`))}</div>`
         
     })
-    const createImageSlider = (images) => {
-        const slider = document.querySelector('.slider');
-        
+    // const createImageSlider = (images) => {
+    //     const slider = document.querySelector('.slider');
+    //     let currentIndex = -1;
     
-        const updateSlider = () => {
-            // Use the recycleArr function to reorder the array
-            
-            currentIndex = (currentIndex + 1) % images.length;
-            // clearInterval(timerSlider)
-            const newImages = recycleArr([...images], currentIndex);
-            // Update the slider's transform property
-            if (slider.querySelectorAll('img')[currentIndex] ){
-            let slideImg = slider.querySelectorAll('img')[currentIndex]
-            console.log(currentIndex, newImages)
-            // slideImg.style.transform = `translateX(-${currentIndex * 100}%)`;
-            // slideImg.style.translate = `transform 15s ease`;
-            // slideImg.scrollTo( {behavior: "smooth", block: "start", inline: "start" })
-            slideImg.scrollIntoView({ behavior: "smooth", block: 'end', inline: "nearest" });
-            // Reorder the DOM nodes (optional for performance)
-            slider.innerHTML = newImages.map(src => `<img id=${src.id} src="${src.pic}" class="slidein" alt="Image">`).join('');
-            }
-        };
+    //     const updateSlider = () => {
+    //         // Use the recycleArr function to reorder the array
+    //         const newImages = recycleArr([...images], currentIndex);
+    //         currentIndex = (currentIndex + 1) % images.length;
     
-        // Set an interval to move the slider forward every 3 seconds
-        timerSlider = setInterval(updateSlider, 5000);
-    };
+    //         // Update the slider's transform property
+    //         if (slider.querySelectorAll('img')[currentIndex] ){
+    //         let slideImg = slider.querySelectorAll('img')[currentIndex]
+    //         console.log(currentIndex, newImages)
+    //         slideImg.scrollIntoView({ behavior: "smooth", block: 'end', inline: "nearest" });
+    //         // Reorder the DOM nodes (optional for performance)
+    //         slider.innerHTML = newImages.map(src => `<img id=${src.id} src="${src.pic}" class="slidein" alt="Image">`).join('');
+    //         }
+    //     };
     
-    // Array of image sources
-    const imageSources = [{id:0, pic:'./imgs/image1.png'}, {id:1, pic:'./imgs/image2.png'}, {id:2, pic:'./imgs/Logo9.png'}, {id:3, pic:'./imgs/Logo14.png'}, {id:4, pic:'./imgs/Logo15.png'}];
+    //     // Set an interval to move the slider forward every 3 seconds
+    //     setInterval(updateSlider, 5000);
+    // };
     
-    // Initialize the slider
-    createImageSlider(imageSources);
+    // // Array of image sources
+    // const imageSources = [{id:0, pic:'./imgs/image1.png'}, {id:1, pic:'./imgs/image2.png'}, {id:2, pic:'./imgs/Logo9.png'}, {id:3, pic:'./imgs/Logo14.png'}, {id:4, pic:'./imgs/Logo15.png'}];
+    
+    // // Initialize the slider
+    // createImageSlider(imageSources);
 
 
     /**
