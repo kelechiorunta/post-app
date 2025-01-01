@@ -72,6 +72,29 @@ span{
         
     }
 }
+.slider{
+    position: relative;
+    display: flex;
+    width: 100%;
+    margin: auto;
+    border: 2px solid white;
+    // justify-content: ;
+    align-items: center;
+    overflow-x: scroll; /* Enable horizontal scrolling */
+    scroll-behavior: smooth; /* Enable smooth scrolling */
+    gap: 2px;
+    img{
+        border: 2px solid white;
+        // position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+.board{
+    background-color: black;
+    height: 60%;
+    width: 100%;
+}
 .container {
     width: 40%;
     height: 80%;
