@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const settings = document.querySelector('.settings');
     const player = document.querySelector('.player');
     const statistics = document.querySelector('.statistics');
+    const board = document.querySelector('.board');
+    const boardBtn = document.querySelector('.boardBtn');
     var timer = parseInt(timerdisplay.textContent);
 
     let val = 0;
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let productStack = []//[{id:0, todo:"Get home on time"}];
     var intervalId;
     var timeoutId;
+    var currentSlide = -1;
 
     display.style.backgroundImage = `url(${'imgs/reflection.jpg'})`
     timerdisplay.style.color = 'red'
@@ -202,8 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(shuffledTasks);
         appendDisplay.innerHTML = `<ul>${todoList(shuffledTasks)}</ul>`;
         
-        // timer = parseInt(timerdisplay.textContent);
-
+        
+        /**Compares the addedTasks and shuffledTasks Array. If they match, the player wins */
         if (compareList(addedTasks, shuffledTasks).isMatched) {
             appendDisplay.style.backgroundColor = 'green';
             clearInterval(intervalId);
@@ -214,11 +217,9 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`Congratulations, you finally made it after \n${compareList(addedTasks, shuffledTasks).trials - 1} attempts and ${10 - parseInt(timerdisplay.textContent)} secs`);
              trials=0; timerdisplay.textContent='10'; result += 5; score.textContent = result; activateTimer(); shuffle()}, 1000);
         }
-        else if (timer <= 0 && (timerdisplay.textContent='0')) {
+        else if (timer <= 0 && (timerdisplay.textContent==='0')) {
             appendDisplay.style.backgroundColor = 'red';
-            // clearInterval(intervalId);
             appendTodo.disabled=true
-            // activateTimer()
         }
         else{
             timer = 10
@@ -231,10 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    /**Shuffles the shuffledTasks */
     appendTodo.addEventListener('click', shuffle)
 
     const activateTimer = () => {
-       
+        let result = parseInt(score.textContent);
         intervalId = setInterval(() => {
             timer = parseInt(timerdisplay.textContent);
             timer --; 
@@ -248,7 +250,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 appendDisplay.style.backgroundColor = 'red';
                 clearInterval(intervalId);
                 alert("Sorry, time's up!");
-                timer=10
+                result -= 5;
+                score.textContent = result;
+                timer=10;
                 appendDisplay.style.backgroundColor = 'black';
                 appendTodo.disabled=false;
                 trials = 0;
@@ -258,6 +262,53 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 1000)
     }
+
+    const slides = ["0", "1", "2"
+        // {id: 0, slide: './imgs/Logo9.png'},
+        // {id: 1, slide: './imgs/Logo14.png'},
+        // {id: 2, slide: './imgs/Logo15.png'},
+    ]
+
+    const createSlides = (arr_slides) => {
+        currentSlide = (currentSlide + 1) 
+        let result = currentSlide % (arr_slides.length);
+        console.log(result)
+            // Get the slider element
+    let slider = document.querySelector('.slider');
+    if (slider) {
+        // Get all <img> elements inside the slider
+        let images = slider.querySelectorAll('img');
+        if (images && images[result]) {
+            // Scroll the targeted image into view
+            console.log("Found")
+            images[result].scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        } else {
+            console.error('Target image not found!');
+        }
+    } else {
+        console.error('Slider element not found!');
+    }
+        return recycleArr(arr_slides, result)
+    } 
+
+    boardBtn.addEventListener('click', () => {
+        //  currentSlide++
+        const slides = [
+            {id: 0, slide: './imgs/Logo9.png'},
+            {id: 1, slide: './imgs/Logo14.png'},
+            {id: 2, slide: './imgs/Logo15.png'},
+        ]
+        
+        let slideArray = createSlides(slides)
+        board.innerHTML = "";
+        board.innerHTML = `<div class='slider'>${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width=${100} height=${100}/>`))}</div>`
+        
+    })
+
+
+    /**
+     * ALGORITHM SECTION
+     */
 
         let newarr = [];
     const moveLeft = (arr, n) => {
@@ -320,5 +371,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return {isMatched, trials} 
         }
 
+    }
+
+    /**Recycles the array like a slide */
+
+    const recycleArr = (arr, n) => {
+        if (n <= 0 || n > arr.length) {
+            return arr
+        }else{
+            let first = arr[0]
+            arr.shift()
+            let newArr = [...arr, first]
+            return [...recycleArr(newArr, n-1)]
+        }
     }
 })

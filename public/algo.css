@@ -72,6 +72,29 @@ span {
   font-weight: 400;
 }
 
+.slider {
+  position: relative;
+  display: flex;
+  width: 100%;
+  margin: auto;
+  border: 2px solid white;
+  align-items: center;
+  overflow-x: scroll; /* Enable horizontal scrolling */
+  scroll-behavior: smooth; /* Enable smooth scrolling */
+  gap: 2px;
+}
+.slider img {
+  border: 2px solid white;
+  top: 0;
+  left: 0;
+}
+
+.board {
+  background-color: black;
+  height: 60%;
+  width: 100%;
+}
+
 .container {
   width: 40%;
   height: 80%;
