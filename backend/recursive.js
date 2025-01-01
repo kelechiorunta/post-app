@@ -153,4 +153,19 @@ const recycleArr = (arr, n) => {
 }
 
 const myStack = [1, 2, 3, 4];
-console.log(recycleArr(myStack, 0))
+console.log(recycleArr(myStack, 1))
+
+const insertNext = (arr, n) => {
+    if (n<=0) {
+        return arr
+    }else{
+        
+         let newarr = arr.filter(num => num !== Math.min(...arr))
+         let minmus = Math.min(...arr)
+         console.log(newarr)
+        
+        return  [minmus, ...insertNext(newarr, n-1)]
+    }
+}
+const checkNumbers = [2, 7, 1, 5, 3]
+console.log(insertNext(checkNumbers, checkNumbers.length))
