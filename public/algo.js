@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     var intervalId;
     var timeoutId;
     var currentSlide = -1;
+    var result = -1;
+    var timerSlider;
+    var currentIndex = 0;
 
     display.style.backgroundImage = `url(${'imgs/reflection.jpg'})`
     timerdisplay.style.color = 'red'
@@ -271,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const createSlides = (arr_slides) => {
         currentSlide = (currentSlide + 1) 
-        let result = currentSlide % (arr_slides.length);
+        result = currentSlide % (arr_slides.length);
         console.log(result)
             // Get the slider element
     let slider = document.querySelector('.slider');
@@ -280,12 +283,23 @@ document.addEventListener('DOMContentLoaded', () => {
         let images = slider.querySelectorAll('img');
         if (images && images[result]) {
             // Scroll the targeted image into view
-            console.log("Found")
-            images[result].scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+            console.log("Found", images[result])
+            images[result].classList.add('slidein')
+
+            // images[result].style.setProperty('transform', 'translateX(-100px)');
+            
+            //  images[result].scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
         } else {
+            // for (let n=0; n<=3; n++)
+            setTimeout(() => {
+                images[result].classList.remove('slidein');
+            }, 5000);
+            // images[result].style.setProperty('transform', 'translateX(-100%)');
+            // images[result].style.setProperty('transition', 'transform 3s ease');
             console.error('Target image not found!');
         }
     } else {
+        
         console.error('Slider element not found!');
     }
         return recycleArr(arr_slides, result)
@@ -294,16 +308,50 @@ document.addEventListener('DOMContentLoaded', () => {
     boardBtn.addEventListener('click', () => {
         //  currentSlide++
         const slides = [
-            {id: 0, slide: './imgs/Logo9.png'},
-            {id: 1, slide: './imgs/Logo14.png'},
-            {id: 2, slide: './imgs/Logo15.png'},
+            {id: 0, slide: './imgs/image1.png'},
+            {id: 1, slide: './imgs/image2.png'},
+            {id: 2, slide: './imgs/Logo9.png'},
         ]
-        
-        let slideArray = createSlides(slides)
-        board.innerHTML = "";
-        board.innerHTML = `<div class='slider'>${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width=${100} height=${100}/>`))}</div>`
+        let slider = document.querySelector('.slider');//["Slide 1", "Slide 2", "Slide 3"];
+        let images = Array.from(slider.querySelectorAll('img'));
+    //    slider.innerHTML = '';
+       let slideArray = (createSlides(slides))
+        // board.innerHTML = "";
+        // board.innerHTML = `<div class='slider'>${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width='auto' height='auto' />`))}</div>`
         
     })
+    const createImageSlider = (images) => {
+        const slider = document.querySelector('.slider');
+        
+    
+        const updateSlider = () => {
+            // Use the recycleArr function to reorder the array
+            
+            currentIndex = (currentIndex + 1) % images.length;
+            // clearInterval(timerSlider)
+            const newImages = recycleArr([...images], currentIndex);
+            // Update the slider's transform property
+            if (slider.querySelectorAll('img')[currentIndex] ){
+            let slideImg = slider.querySelectorAll('img')[currentIndex]
+            console.log(currentIndex, newImages)
+            // slideImg.style.transform = `translateX(-${currentIndex * 100}%)`;
+            // slideImg.style.translate = `transform 15s ease`;
+            // slideImg.scrollTo( {behavior: "smooth", block: "start", inline: "start" })
+            slideImg.scrollIntoView({ behavior: "smooth", block: 'end', inline: "nearest" });
+            // Reorder the DOM nodes (optional for performance)
+            slider.innerHTML = newImages.map(src => `<img id=${src.id} src="${src.pic}" class="slidein" alt="Image">`).join('');
+            }
+        };
+    
+        // Set an interval to move the slider forward every 3 seconds
+        timerSlider = setInterval(updateSlider, 5000);
+    };
+    
+    // Array of image sources
+    const imageSources = [{id:0, pic:'./imgs/image1.png'}, {id:1, pic:'./imgs/image2.png'}, {id:2, pic:'./imgs/Logo9.png'}, {id:3, pic:'./imgs/Logo14.png'}, {id:4, pic:'./imgs/Logo15.png'}];
+    
+    // Initialize the slider
+    createImageSlider(imageSources);
 
 
     /**
@@ -380,6 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return arr
         }else{
             let first = arr[0]
+            // let firstIndex = arr[0].index
+            // firstIndex ++
             arr.shift()
             let newArr = [...arr, first]
             return [...recycleArr(newArr, n-1)]
