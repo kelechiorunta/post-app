@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const statistics = document.querySelector('.statistics');
     const board = document.querySelector('.board');
     const boardBtn = document.querySelector('.boardBtn');
+    const screenBtn = document.querySelector('.screenBtn');
+    const interiorCont = document.querySelector('.interior');
     var timer = parseInt(timerdisplay.textContent);
 
     let val = 0;
@@ -153,11 +155,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
+    screenBtn.addEventListener('click', () => {
+        container.remove();
+        // container.style.display = 'none';
+        document.body.append(interiorCont)
+        interiorCont.style.display = 'block';
+        statistics.style.display = 'none';
+        settings.style.display = 'none'; 
+        // const xml = new XMLHttpRequest();
+
+        // xml.onload = function(){
+        //     if (this.readyState === 4) {
+        //         container.innerHTML = this.responseText;
+        //     }
+        // }
+        // xml.open('GET', './Introduction.html');
+        // xml.send();
+    });
+
     player.addEventListener('click', () => {
         container.remove();
         // container.style.display = 'none';
         document.body.append(statistics)
         statistics.style.display = 'block';
+        interiorCont.style.display = 'none';
         settings.style.display = 'none'; 
         // const xml = new XMLHttpRequest();
 
@@ -175,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // container.style.display = 'none';
         document.body.append(settings)
         settings.style.display = 'block';
+        interiorCont.style.display = 'none';
         statistics.style.display = 'none';
         // const xml = new XMLHttpRequest();
 
