@@ -162,10 +162,94 @@ const insertNext = (arr, n) => {
         
          let newarr = arr.filter(num => num !== Math.min(...arr))
          let minmus = Math.min(...arr)
-         console.log(newarr)
+        //  console.log(newarr)
         
         return  [minmus, ...insertNext(newarr, n-1)]
     }
 }
 const checkNumbers = [2, 7, 1, 5, 3]
 console.log(insertNext(checkNumbers, checkNumbers.length))
+
+
+/**Sorry this is a different algorithm not a recursive function due to more space and more memory utilization as a result of more stacks */
+const arraySubtraction = (arr) => {
+    if (arr.length === 1) {
+        // Base case: return the last remaining number
+        return arr[0];
+    }
+
+    const maxNo = Math.max(...arr); // Find the largest number
+    // Remove only one occurrence of the maximum value
+    const index = arr.indexOf(maxNo);
+    const newArr = [...arr.slice(0, index), ...arr.slice(index + 1)];
+    console.log(`Max: ${maxNo}, New Array: ${newArr}`);
+
+    // Subtract the next recursive result directly from maxNo
+    return maxNo - newArr.reduce((sum, num) => sum + num, 0);
+};
+
+// Example usage
+const arrSub = [1, 3, 7, 9]; // Expected: 10 - 7 - 5 - 3 = -5
+// console.log(arraySubtraction(arrSub)); // Output: -5
+
+/**This is a non-tail recursive version of the arraySubtraction
+ * because the return value does not just make a single
+ * recursive call. Time complexity becomes O(n) and auxillary
+ * space is O(n) as it uses up more stacks.
+ */
+
+let result = 0
+const arraySubNR = (arr) => {
+    if (arr.length <= 0) {
+        return arr[0]//.reduce((sum, n) => arr[0], 0)
+    }
+    let newArr = arr.filter(item => item !== arr[0]);
+     
+    if (result <= 0) {
+        result = arr[0] //- newArr[0]
+    }else{
+        result -= arr[0]
+    }
+
+    console.log(newArr, result )
+    
+    /**This does not return a single recursive call but a 
+     * series of recursive calls until the (newArr length is 0)-which is the base call.
+     * This series will lead to additional stacks and auxillary space/memories
+     * for the process to run to completion. Time complexity is O(n) and space auxillary is O(n);
+     */
+    return  (result - arraySubNR(newArr))
+}
+console.log(arraySubNR([1, 3, 7, 9]))
+//  console.log(arraySubNR([12,20,34, 55, 75]))
+
+
+/**Tail recursive function of arraySubtraction
+ * This is because it returns a recursive call once
+ * at the end of the function thereby being more optimized
+ * as time and space complexity becomes 0(n) while auxillary space
+ * is 0(1)- constant space and time execution like an iteration algorithm
+ */
+/**Optimized recursive function */
+const arraySubTR = (arr, a) => {
+    if (arr.length === 0) {
+        return a
+    } else {
+        let maxValue = Math.max(...arr);
+        let newArr = arr.filter(item => item !== maxValue);
+        // console.log(newArr, maxValue, a)
+        if (a===0) {
+            a = maxValue
+        } else{
+            a = a-maxValue
+        }
+        //Recursive function called once
+        return arraySubTR(newArr, a)
+    }
+}
+
+const arraySub = (arr) => {
+    return arraySubTR(arr, 0)
+}
+
+// console.log(arraySub([12,20,34, 55, 75]))
