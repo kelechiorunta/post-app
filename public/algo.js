@@ -214,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // settings.style.display = 'none'; 
         settings.remove();
         statistics.remove();
+        interiorCont.remove();
         document.body.append(container)
         // container.style.display = 'block' 
         // const xml = new XMLHttpRequest();

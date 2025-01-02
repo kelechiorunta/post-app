@@ -193,6 +193,13 @@ header nav {
   left: 40%;
 }
 
+.backimage {
+  z-index: -999;
+  opacity: 1;
+  height: 550px;
+  margin-top: -200px;
+}
+
 .interior {
   width: 100%;
   height: 80%;
