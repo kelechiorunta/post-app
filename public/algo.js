@@ -370,16 +370,16 @@ observerButton.addEventListener('click', () => {
             const slide = entries[0];
             
             if (slide.isIntersecting){
-                loadNewImgs(slider.children.length - 1, slideobserver, slider.querySelectorAll('img'));
+                loadNewImgs(slider.children.length, slideobserver, slider.querySelectorAll('img'));
                 console.log(slider.length)
                 observer.unobserve(slide.target);
                 observer.observe(slider.querySelectorAll('img')[slider.children.length - 1]);
             }
     
     }
-    
+
     const slideobserver = new IntersectionObserver(intersecting, observerOptions);
-    const appendobserver = new IntersectionObserver(appending)
+    const appendobserver = new IntersectionObserver(appending, observerOptions)
     const slideImgs = slider.querySelectorAll('img');
     
     slideImgs.forEach((slides) => {
