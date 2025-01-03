@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const boardBtn = document.querySelector('.boardBtn');
     const screenBtn = document.querySelector('.screenBtn');
     const interiorCont = document.querySelector('.interior');
+    const slider = document.querySelector('.slider');
     var timer = parseInt(timerdisplay.textContent);
 
     let val = 0;
@@ -158,10 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
     screenBtn.addEventListener('click', () => {
         container.remove();
         // container.style.display = 'none';
-        document.body.append(interiorCont)
+        document.querySelector('.main_container').append(interiorCont)
         interiorCont.style.display = 'block';
         statistics.style.display = 'none';
-        settings.style.display = 'none'; 
+        settings.style.display = 'none';
+
         // const xml = new XMLHttpRequest();
 
         // xml.onload = function(){
@@ -176,10 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
     player.addEventListener('click', () => {
         container.remove();
         // container.style.display = 'none';
-        document.body.append(statistics)
+        document.querySelector('.main_container').append(statistics)
         statistics.style.display = 'block';
         interiorCont.style.display = 'none';
         settings.style.display = 'none'; 
+
         // const xml = new XMLHttpRequest();
 
         // xml.onload = function(){
@@ -194,39 +197,20 @@ document.addEventListener('DOMContentLoaded', () => {
     documentation.addEventListener('click', () => {
         container.remove();
         // container.style.display = 'none';
-        document.body.append(settings)
+        document.querySelector('.main_container').append(settings)
         settings.style.display = 'block';
         interiorCont.style.display = 'none';
         statistics.style.display = 'none';
-        // const xml = new XMLHttpRequest();
-
-        // xml.onload = function(){
-        //     if (this.readyState === 4) {
-        //         container.innerHTML = this.responseText;
-        //     }
-        // }
-        // xml.open('GET', './Introduction.html');
-        // xml.send();
+        
     });
 
     game.addEventListener('click', async() => {
         
-        // settings.style.display = 'none'; 
         settings.remove();
         statistics.remove();
         interiorCont.remove();
-        document.body.append(container)
-        // container.style.display = 'block' 
-        // const xml = new XMLHttpRequest();
-
-        // xml.onload = function(){
-        //     if (this.readyState === 4) {
-        //         container.innerHTML = this.responseText;
-        //         container.style.width = '50%';
-        //     }
-        // }
-        // xml.open('GET', './algorithm.html');
-        // xml.send();
+        document.querySelector('.main_container').append(container)
+        
     })
 
     const shuffle = () => {
@@ -338,12 +322,99 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
         let slider = document.querySelector('.slider');//["Slide 1", "Slide 2", "Slide 3"];
         let images = Array.from(slider.querySelectorAll('img'));
+        
     //    slider.innerHTML = '';
        let slideArray = (createSlides(slides))
-        board.innerHTML = "";
-        board.innerHTML = `<div class='slider'>${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width='auto' height='auto' />`))}</div>`
+        slider.innerHTML = "";
+        slider.innerHTML = (`${slideArray.map(item => (`<img src=${item.slide} alt=${item.id} width='auto' height='auto' />`))}`)
         
+       
     })
+
+// Add an event listener to the button
+const observerButton = document.querySelector('.observer');
+observerButton.addEventListener('click', () => {
+
+    const observerOptions = {
+        root: null,
+        rootMargin: "-50px",
+        threshold: 0,
+    };
+    
+    const intersecting = (entries, observer) => {
+        entries.forEach((entry, index) => {
+            let slide = entry.target
+            // console.log(slide)
+            if (entry.isIntersecting) {
+                slide.parentElement.style.backgroundColor = 'rgba(255,255,255,0.5)';
+                slide.style.setProperty('opacity', '1')
+                slide.classList.toggle('slidein', entry.isIntersecting)
+                slide.scrollIntoView({behavior: 'smooth', block: 'end'})
+                // observer.unobserve(slide)
+            } else {
+                slide.parentElement.style.backgroundColor = 'black';
+                slide.classList.remove('slidein')
+                slide.style.setProperty('opacity', '0')
+            }
+        });
+    };
+
+    const appending = (entries, observer) => {
+
+        const pics = [
+            {id: 1, src: './imgs/image1.png', alt: 'Slide 1'},
+            {id: 2, src: './imgs/image2.png', alt: 'Slide 2'},
+            {id: 3, src: './imgs/Logo9.png', alt: 'Slide 3'},
+        ]
+        
+            const slide = entries[0];
+            
+            if (slide.isIntersecting){
+                loadNewImgs(slider.children.length - 1, slideobserver, slider.querySelectorAll('img'));
+                console.log(slider.length)
+                observer.unobserve(slide.target);
+                observer.observe(slider.querySelectorAll('img')[slider.children.length - 1]);
+            }
+    
+    }
+    
+    const slideobserver = new IntersectionObserver(intersecting, observerOptions);
+    const appendobserver = new IntersectionObserver(appending)
+    const slideImgs = slider.querySelectorAll('img');
+    
+    slideImgs.forEach((slides) => {
+        slideobserver.observe(slides);
+    });
+
+    appendobserver.observe(slideImgs[slideImgs.length - 1])
+   
+});
+
+
+const loadNewImgs = (n, observer, slides) => {
+    if (n <= 0) {
+        // Base case: stop recursion when n reaches 0
+        return slider;
+    }
+    
+    // Create a new image element
+    const img = document.createElement('img');
+    img.src = slides[(slides.length) - n].src; // Use the source of the first slide as an example
+    img.classList.add('slidein');
+    img.alt = slides[(slides.length) - n].alt;
+
+    // Observe the newly created image
+    observer.observe(img);
+
+    // Append the new image to the slider
+    slider.append(img);
+
+    console.log(`Added image ${n}`, slider);
+
+    // Recursive call with updated n
+    return loadNewImgs(n - 1, observer, slides);
+};
+
     // const createImageSlider = (images) => {
     //     const slider = document.querySelector('.slider');
     //     let currentIndex = -1;
