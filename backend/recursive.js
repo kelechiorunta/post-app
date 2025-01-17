@@ -198,20 +198,23 @@ const arrSub = [1, 3, 7, 9]; // Expected: 10 - 7 - 5 - 3 = -5
  * space is O(n) as it uses up more stacks.
  */
 
-let result = 0
+let result = 0;
 const arraySubNR = (arr) => {
-    if (arr.length <= 0) {
-        return arr[0]//.reduce((sum, n) => arr[0], 0)
-    }
-    let newArr = arr.filter(item => item !== arr[0]);
-     
-    if (result <= 0) {
-        result = arr[0] //- newArr[0]
-    }else{
-        result -= arr[0]
-    }
+    if (arr[0] == undefined) {
+        arr = [];
+        console.log(arr, result, arr[0])// 
+        return result - 12
+    } else if (arr.length > 0) {
+    
+        let newArr = arr.filter(item => item !== arr[0]);
+        
+        if (result === undefined || result === 0) {
+            result = arr[0] //- newArr[0]
+        }else{
+            result -= arr[0]
+        }
 
-    console.log(newArr, result )
+    // console.log(newArr, result )
     
     /**This does not return a single recursive call but a 
      * series of recursive calls until the (newArr length is 0)-which is the base call.
@@ -220,7 +223,8 @@ const arraySubNR = (arr) => {
      */
     return  (result - arraySubNR(newArr))
 }
-console.log(arraySubNR([1, 3, 7, 9]))
+}
+console.log(arraySubNR([11, 3, 7, 9]))
 //  console.log(arraySubNR([12,20,34, 55, 75]))
 
 
@@ -253,3 +257,52 @@ const arraySub = (arr) => {
 }
 
 // console.log(arraySub([12,20,34, 55, 75]))
+
+const argSum = (...args) => {
+    if ([...args].length <= 0){
+        return 0
+    }
+    let first = [...args][0]
+    let newArr = [...args].filter(num => num != [...args][0]);
+    return first + argSum(...newArr)
+}
+
+console.log(argSum(1,2,3,4,5,6))
+
+const quickSort = (arr, low, high) => {
+    if (low >= high) {
+        return arr
+    }
+    const partition = (arr, low, high) => {
+       
+        let pivot = arr[Math.floor((low + high) / 2)]; // Choose the middle element as pivot
+        let i = low;
+        let j = high;
+
+        while (i <= j) {
+            // Find elements on the wrong side of the pivot
+            while (arr[i] < pivot) i++;
+            while (arr[j] > pivot) j--;
+      
+            // Swap elements and move pointers
+            if (i <= j) {
+                
+              [arr[i], arr[j]] = [arr[j], arr[i]];
+              console.log(arr[i],arr[j])
+              i++;
+              j--;
+              
+            }
+          }
+          return i; // Return the index where partitioning ends
+        };
+        const partitionIndex = partition(arr, low, high);
+
+        // Recursively sort left and right subarrays
+        quickSort(arr, low, partitionIndex - 1);
+        quickSort(arr, partitionIndex, high);
+    }
+// Usage example
+const array = [3, 6, 8, 10, 1, 77, 54, 23, 2, 1];
+quickSort(array, 0, array.length - 1);
+console.log(array); // Outputs a sorted array: [1, 1, 2, 3, 6, 8, 10]
